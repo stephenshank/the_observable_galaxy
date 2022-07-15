@@ -1,0 +1,7 @@
+categories:
+- Visualization
+description: A display application for the ObservableHQ platform
+homepage_url: https://github.com/stephenshank/the_observable_galaxy
+name: the_observable_galaxy
+owner: stephenshank
+remote_repository_url: https://github.com/stephenshank/the_observable_galaxy

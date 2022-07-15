@@ -1,0 +1,40 @@
+<tool id="observable" name="ObservableHQ" version="0.1.0">
+    <description>
+        Select multiple datasets for analysis on the ObservableHQ platform
+    </description>
+    <requirements>
+        <requirement type="package" version="3.10.2">python</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+      python '${__tool_directory__}/observable.py' 
+      $observable_form
+      $__app__.security.encode_id($observable_json.creating_job.history.id)
+      $observable_json
+      $__app__.security.encode_id($observable_json.id)
+      #for $param in $param_dict:
+          $param['key'] $__app__.security.encode_id($param['val'].id)
+      #end for
+    ]]></command>
+    <inputs>
+        <param type="text" name="observable_form" label="Username/notebook">
+        </param>
+        <repeat name="param_dict" title="Observable parameters">
+            <param name="key" type="text" label="Key for this object in the observable sheet">
+                <sanitizer invalid_char="_">
+                    <valid initial="string.ascii_letters,string.digits">
+                        <add value="_" />
+                    </valid>
+                </sanitizer>
+            </param>
+            <param name="val" type="data" format="data" label="Input file for observable assocaited with above key"/>
+        </repeat>
+    </inputs>
+    <outputs>
+        <data name="observable_json" format="observablehq"/>
+    </outputs>
+    <help><![CDATA[
+      This tool allows for selecting multiple datasets to be consumed by a desired ObservableHQ notebook.
+      An associated display application will link out to the notebook.
+      There are corresponding tools on the ObservableHQ side to easily consume associated datasets for developer productivity.
+    ]]></help>
+</tool>

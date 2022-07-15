@@ -1,0 +1,13 @@
+<display id="observable" version="1.0.0" name="View results:">
+    <link id="main" name="ObservableHQ Dashboard">
+      <url>https://observablehq.com/@${remaining_url}</url>
+      <param type="data" name="json_file" url="galaxy.json" />
+      <param type="template" name="remaining_url" strip="True">
+#import json
+#set f = open($json_file.file_name)
+#set d = json.load(f)
+#set payload = '%s?payload_id=%s' % (d['notebook'], d['payload_id'])
+$payload
+      </param>
+    </link>
+</display>

@@ -6,35 +6,66 @@
         <requirement type="package" version="3.10.2">python</requirement>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
+      ## handle individual datasets
+      echo key,dataset_id,extension > individual.csv;
+      #for $param in $individual:
+        #set $key = $param['key']
+        #set $dataset_id = $__app__.security.encode_id($param['val'].id)
+        #set $extension = $param['val'].ext
+        echo "$key,$dataset_id,$extension" >> individual.csv;
+      #end for
+
+      ## handle collections
+      echo key,element_id,dataset_id,extension > collection.csv;
+      #for $param in $collection:
+        #set $key = $param['key']
+        #for $element in $param['val']:
+          #set $dataset_id = $__app__.security.encode_id($element.id)
+          #set $element_id = $element.element_identifier
+          #set $extension = $element.ext
+          echo "$key,$element_id,$dataset_id,$extension" >> collection.csv;
+        #end for
+      #end for
+
+      ## aggregate information
       python '${__tool_directory__}/observable.py' 
       $observable_form
       $__app__.security.encode_id($observable_json.creating_job.history.id)
       $observable_json
-      $__app__.security.encode_id($observable_json.id)
-      #for $param in $param_dict:
-          $param['key'] $__app__.security.encode_id($param['val'].id)
-      #end for
+      $__app__.security.encode_id($observable_json.id);
+
+      ## clean up
+      rm individual.csv;
+      rm collection.csv;
     ]]></command>
     <inputs>
         <param type="text" name="observable_form" label="Username/notebook">
         </param>
-        <repeat name="param_dict" title="Observable parameters">
-            <param name="key" type="text" label="Key for this object in the observable sheet">
+        <repeat name="individual" title="Individual datasets">
+            <param name="key" type="text" label="Key to associate with this dataset">
                 <sanitizer invalid_char="_">
                     <valid initial="string.ascii_letters,string.digits">
                         <add value="_" />
                     </valid>
                 </sanitizer>
             </param>
-            <param name="val" type="data" format="data" label="Input file for observable assocaited with above key"/>
+            <param name="val" type="data" format="data" label="Dataset associated with above key"/>
+        </repeat>
+        <repeat name="collection" title="Collections">
+            <param name="key" type="text" label="Key to associate with this collection">
+                <sanitizer invalid_char="_">
+                    <valid initial="string.ascii_letters,string.digits">
+                        <add value="_" />
+                    </valid>
+                </sanitizer>
+            </param>
+            <param name="val" type="data_collection" format="data" label="Collection associated with above key"/>
         </repeat>
     </inputs>
     <outputs>
         <data name="observable_json" format="observablehq"/>
     </outputs>
     <help><![CDATA[
-      This tool allows for selecting multiple datasets to be consumed by a desired ObservableHQ notebook.
-      An associated display application will link out to the notebook.
-      There are corresponding tools on the ObservableHQ side to easily consume associated datasets for developer productivity.
+        TODO: Fill in help.
     ]]></help>
 </tool>

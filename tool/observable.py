@@ -1,5 +1,7 @@
 import sys
 import json
+from csv import DictReader
+from itertools import groupby
 
 
 observable = {}
@@ -8,11 +10,24 @@ observable['history_id'] = sys.argv[2]
 output_filename = sys.argv[3]
 observable['payload_id'] = sys.argv[4]
 
-keys = sys.argv[5::2]
-vals = sys.argv[6::2]
-for key, val in zip(keys, vals):
-    observable[key] = val
+with open('individual.csv') as individual_file:
+    individual_reader = DictReader(individual_file)
+    for row in individual_reader:
+        observable[row['key']] = {
+            'dataset_id': row['dataset_id'],
+            'extension': row['extension']
+        }
 
-print(', '.join(sys.argv))
+key_function = lambda row: row['key']
+with open('collection.csv') as collection_file:
+    collection_reader = DictReader(collection_file)
+    groups = groupby(collection_reader, key_function)
+    for key, group in groups:
+        observable[key] = []
+        for element in group:
+            element = dict(element)
+            del element['key']
+            observable[key].append(element)
+
 with open(output_filename, 'w') as outfile:
     json.dump(observable, outfile, indent=2)

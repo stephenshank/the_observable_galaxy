@@ -5,10 +5,13 @@ from itertools import groupby
 
 
 observable = {}
-observable['notebook'] = sys.argv[1]
+raw_notebook = sys.argv[1]
+observable['notebook'] = raw_notebook.replace('@', '')
 observable['history_id'] = sys.argv[2]
 output_filename = sys.argv[3]
 observable['payload_id'] = sys.argv[4]
+full_base_url = sys.argv[5]
+observable['base_url'] = full_base_url.replace('https://', '')
 
 with open('individual.csv') as individual_file:
     individual_reader = DictReader(individual_file)

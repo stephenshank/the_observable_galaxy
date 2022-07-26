@@ -32,16 +32,17 @@
       $observable_form
       $__app__.security.encode_id($observable_json.creating_job.history.id)
       $observable_json
-      $__app__.security.encode_id($observable_json.id);
+      $__app__.security.encode_id($observable_json.id)
+      $__app__.config.galaxy_infrastructure_url;
 
       ## clean up
       rm individual.csv;
       rm collection.csv;
     ]]></command>
     <inputs>
-        <param type="text" name="observable_form" label="Username/notebook">
+        <param type="text" name="observable_form" label="Username/notebook" help="ObservableHQ notebook to link to. No need to include the @.">
         </param>
-        <repeat name="individual" title="Individual datasets">
+        <repeat name="individual" title="Individual datasets" help="Individual dataset that will have dataset ID and extension automatically extracted.">
             <param name="key" type="text" label="Key to associate with this dataset">
                 <sanitizer invalid_char="_">
                     <valid initial="string.ascii_letters,string.digits">
@@ -51,7 +52,7 @@
             </param>
             <param name="val" type="data" format="data" label="Dataset associated with above key"/>
         </repeat>
-        <repeat name="collection" title="Collections">
+        <repeat name="collection" title="Collections" help="Collections that will have element IDs, dataset IDs and extensions automatically extracted.">
             <param name="key" type="text" label="Key to associate with this collection">
                 <sanitizer invalid_char="_">
                     <valid initial="string.ascii_letters,string.digits">
@@ -66,6 +67,12 @@
         <data name="observable_json" format="observablehq"/>
     </outputs>
     <help><![CDATA[
-        TODO: Fill in help.
+        This tool allows users to select a variable amount of datasets and collections to be consumed by the ObservableHQ notebook platform, found at https://observablehq.com/.
+
+        Dataset IDs and file extensions are automatically extracted to a JSON file. Additionally, elements in a collection will also have their element identifier extracted. A variety of other metadata useful for seamless communication are automatically extracted such as history IDs, "payload ID" (the datasetID of the JSON file with all of this information), and Galaxy's base URL.
+
+        An associated display application with the JSON file will quickly take users to the ObservableHQ platform. A suite of tools been developed at https://observablehq.com/@stephenshank/the-observable-galaxy which abstract away API details from the user for rapid prototyping and productivity.
+
+        We would love to hear from you! Feel free to reach out at https://github.com/stephenshank/the_observable_galaxy with any questions or concerns.
     ]]></help>
 </tool>

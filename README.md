@@ -1,6 +1,9 @@
 # The Observable Galaxy
+![alt text](infographic.png "Infographic")
 
 Integrating the [ObservableHQ notebook platform](https://observablehq.com/) with [the Galaxy project](http://galaxyproject.org/).
+
+Go to the [main Observable page](https://observablehq.com/@stephenshank/the-observable-galaxy) to get started. This repository contains the associated tool and display application for Galaxy.
 
 ## Installation
 
@@ -22,4 +25,4 @@ to `$GALAXY_ROOT/config/datatypes_conf.xml`.
 
 ## Usage
 
-See [this minimal reproducible example](https://observablehq.com/@stephenshank/observable-galaxy-mre?payload_id=40c0d768eb2363a0).
+See [this minimal reproducible example](https://observablehq.com/@stephenshank/observable-galaxy-mre).
